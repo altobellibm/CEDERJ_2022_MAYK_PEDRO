@@ -15,6 +15,7 @@ from pymongo import MongoClient as _MongoClient
 from QScraper import AnswerSpider as _AnswerSpider
 from QScraper import SearchSpider as _SearchSpider
 from QScraper import TopicSpider as _TopicSpider
+from QScraper import PostSpider as _PostSpider
 from scrapy.crawler import CrawlerRunner as _CrawlerRunner
 from scrapy.settings import Settings as _Settings
 from twisted.internet import defer as _defer
@@ -117,7 +118,8 @@ class QScrapeRunner:
         def crawl():
             search_types={
                 "question": _AnswerSpider,
-                "topic":_TopicSpider
+                "topic":_TopicSpider,
+                "post" : _PostSpider
             }
             yield runner.crawl(_SearchSpider, queries,
                                self._requests_params, client=client,
@@ -142,16 +144,23 @@ if __name__ == "__main__":
     uri = ("mongodb://localhost:27017/")
     client = _MongoClient(uri)
 
-    qsr_answers = QScrapeRunner(
-        "example",
-        "example@email.com",
-        f"etc{_os_sep}requests_params_answers.json"
-    )
-    qsr_answers.run(client, f"etc{_os_sep}keywords.json", search_result_type="question")
+    # qsr_answers = QScrapeRunner(
+    #     "example",
+    #     "example@email.com",
+    #     f"etc{_os_sep}requests_params_answers.json"
+    # )
+    # qsr_answers.run(client, f"etc{_os_sep}keywords.json", search_result_type="question")
 
-    qsr_topics = QScrapeRunner(
-        "example",
-        "example@email.com",
-        f"etc{_os_sep}requests_params_topics.json"
-    )
-    qsr_topics.run(client, f"etc{_os_sep}keywords.json", search_result_type="topic")
+    # qsr_topics = QScrapeRunner(
+    #     "example",
+    #     "example@email.com",
+    #     f"etc{_os_sep}requests_params_topics.json"
+    # )
+    # qsr_topics.run(client, f"etc{_os_sep}keywords.json", search_result_type="topic")
+
+    qsr_posts = QScrapeRunner(
+            "example",
+            "example@email.com",
+            f"etc{_os_sep}requests_params_posts.json"
+        )
+    qsr_posts.run(client, f"etc{_os_sep}keywords.json", search_result_type="post")
