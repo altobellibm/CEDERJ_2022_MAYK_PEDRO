@@ -160,6 +160,7 @@ class SearchSpider(scrapy.Spider):
 
         """
         result = response.json()
+
         searchConnection = result["data"]["searchConnection"]
 
         if searchConnection is not None:
@@ -204,6 +205,69 @@ class SearchSpider(scrapy.Spider):
                         self._db["questions"].insert_one(question)
                     except DuplicateKeyError:
                         pass
+                    
+                elif tipo == "topic":
+                    tid = item["node"][tipo]["tid"]
+                    url += item["node"][tipo]["url"]
+                    topic = item["node"][tipo]
+                    topic["_id"] = tid
+                    topic["query"] = query
+                    topic["category"] = category
+                    try:
+                        self._db["category_query_tid"].insert_one(
+                            {"_id": f"{category}_{query}_{tid}",
+                             "category_query": f"{category}_{query}",
+                             "tid": tid}
+                        )
+                    except DuplicateKeyError:
+                        pass
+
+                    try:
+                        # inserindo topics inéditas no banco
+                        self._db["topics"].insert_one(topic)
+                    except DuplicateKeyError:
+                        pass
+                elif tipo == "post":
+                    pid = item["node"][tipo]["pid"]
+                    url += item["node"][tipo]["url"]
+                    post = item["node"][tipo]
+                    post["_id"] = pid
+
+                    space = post['tribeItem']
+                    if not space:
+                        continue
+                    space = post['tribeItem']['tribe']
+                    sid = space['tribeId']
+                    space["_id"] = sid
+                    
+                    try:
+                        self._db["category_query_pid"].insert_one(
+                            {"_id": f"{category}_{query}_{pid}",
+                             "category_query": f"{category}_{query}",
+                             "pid": pid}
+                        )
+                    except DuplicateKeyError:
+                        pass
+                    
+                    try:
+                        self._db["space_post"].insert_one(
+                            {"_id": f"{sid}_ {pid}",
+                             "sid": sid,
+                             "pid": pid}
+                        )
+                    except DuplicateKeyError:
+                        pass
+
+                    try:
+                        self._db["space"].insert_one(space)
+                    except DuplicateKeyError:
+                        pass
+
+                    try:
+                        # inserindo posts inéditas no banco
+                        self._db["posts"].insert_one(post)
+                    except DuplicateKeyError:
+                        pass
 
             hasNextPage = searchConnection["pageInfo"].get("hasNextPage",
                                                            False)
@@ -214,7 +278,7 @@ class SearchSpider(scrapy.Spider):
             # Atualizando atributo da próxima request
             self._after += 10
             self.payload["variables"]["after"] = str(self._after)
-
+            
 
 ###############################################################################
 class AnswerSpider(scrapy.Spider):
@@ -274,6 +338,7 @@ class AnswerSpider(scrapy.Spider):
         tmp = [line for line in tmp]
 
         self.hasNextPage = dict()
+
         for line in tqdm(tmp, desc="Lendo bd.tmp:"):
             category = line.get("category", "General")
             query = line.get("query")
@@ -322,6 +387,227 @@ class AnswerSpider(scrapy.Spider):
         None.
 
         """
+        result = response.json()
+        pagedListDataConnection = result["data"]["question"][
+            "pagedListDataConnection"]
+        edges = pagedListDataConnection["edges"]
+
+        iteracao = (self._after + 1) // 12
+        for item in tqdm(edges,
+                         desc=f"Parsing {iteracao} Answers of {qid}"):
+            # pulando o que não é resposta
+            if "answer" not in item["node"]:
+                continue
+            # QuestionAnswerItem2 -> é uma resposta da pergunta em específico
+            if item["node"]["__typename"] != "QuestionAnswerItem2":
+                continue
+
+            answer = item["node"]["answer"]
+            aid = answer["aid"]
+            answer['_id'] = aid
+
+            try:
+                # Inserindo relações question-answer inéditas no banco -
+                # coleção question_answer
+                self._db["question_answer"].insert_one(
+                    {"_id": f"{qid}_{aid}",
+                     "qid": qid,
+                     "aid": aid}
+                )
+            except DuplicateKeyError:
+                pass
+
+            try:
+                # inserindo answers inéditas no banco - coleção answers
+                self._db["answers"].insert_one(answer)
+            except DuplicateKeyError:
+                pass
+
+        hasNextPage = pagedListDataConnection["pageInfo"].get("hasNextPage",
+                                                              False)
+        if not hasNextPage:
+            # Indica que não existe próxima página
+            self.hasNextPage[qid] = False
+
+        # Atualizando atributo da próxima request
+        self._after += 12  # after1 = first*n + after0
+        self.payload["variables"]["after"] = str(self._after)
+
+###############################################################################
+class TopicSpider(scrapy.Spider):
+    """Classe de coleta de dados de respostas da página de uma pergunta."""
+
+    name = 'quora_topic_spider'
+
+    custom_settings = {
+        'DOWNLOAD_DELAY': 0.05,
+        'CONCURRENT_REQUESTS': 5,
+    }
+
+    def __init__(self, requests_params: dict, client: MongoClient):
+        super().__init__()
+
+        self._db = client["quora_database"]
+        try:
+            self.url = requests_params['topic-page']['url']
+            self.headers = requests_params['topic-page']['headers']
+            self.payload = requests_params['topic-page']['payload']
+            self.cookies = requests_params['topic-page']['cookies']
+            self.headers['user-agent'] += str(requests_params['user-agent'])
+        except Exception:
+            raise ValueError("Verifique o arquivo de parâmetros.")
+
+    def start_requests(self):
+        topics = self._db["topics"].find()
+        topics = [line for line in topics]
+
+        self.hasNextPage = dict()
+        
+        for line in tqdm(topics, desc="Lendo bd.topics:"):
+            print(f"Line:\n{line}\n")
+            category = line.get("category", "General")
+            query = line.get("query")
+            tid = line.get("_id")
+            # url = line.get("url")
+            self.hasNextPage[tid] = True
+            self._after = 0
+            # self.headers["referer"] = f"https://www.quora.com{url}"
+            self.payload["variables"]["multifeedNumBundlesOnClient"] = str(self._after)
+            self.payload["variables"]["pagedata"] = tid
+
+            while True:
+                yield scrapy.http.JsonRequest(
+                    url=self.url,
+                    headers=self.headers,
+                    data=self.payload,
+                    cookies=self.cookies,
+                    callback=self.parse,
+                    cb_kwargs={'tid': tid,
+                               'query': query,
+                               'category': category}
+                )
+                if not self.hasNextPage[tid]:
+                    break
+
+        try:
+            self._db["tmp"].drop()
+        except Exception as e:
+            print(e)
+
+    def parse(self, response, category, query, tid):
+        print("parse")
+        result = response.json()
+
+        if not result["data"]:
+            print(result)
+            # pagedListDataConnection={
+            #     "pageInfo": {}
+            # }
+        else:
+            pagedListDataConnection = result["data"]["question"][
+                "pagedListDataConnection"]
+            edges = pagedListDataConnection["edges"]
+        
+            iteracao = (self._after + 1) // 12
+            for item in tqdm(edges,
+                            desc=f"Parsing {iteracao} Questions of {tid}"):
+                print(item)
+                if "answer" not in item["node"]:
+                    continue
+                # QuestionAnswerItem2 -> é uma resposta da pergunta em específico
+                if item["node"]["__typename"] != "QuestionAnswerItem2":
+                    continue
+
+                answer = item["node"]["answer"]
+                tid = answer["tid"]
+                answer['_id'] = tid
+
+        #     try:
+        #         # Inserindo relações question-answer inéditas no banco -
+        #         # coleção question_answer
+        #         self._db["topic_answer"].insert_one(
+        #             {"_id": f"{tid}_{qid}",
+        #             "tid": tid,
+        #             "qid": qid}
+        #         )
+        #     except DuplicateKeyError:
+        #         pass
+
+        #     try:
+        #         # inserindo answers inéditas no banco - coleção answers
+        #         self._db["answers"].insert_one(answer)
+        #     except DuplicateKeyError:
+        #         pass
+
+        hasNextPage = pagedListDataConnection["pageInfo"].get("hasNextPage",
+                                                            False)
+        if not hasNextPage:
+            # Indica que não existe próxima página
+            self.hasNextPage[tid] = False
+
+        # Atualizando atributo da próxima request
+        self._after += 12  # after1 = first*n + after0
+        self.payload["variables"]["after"] = str(self._after)
+
+###############################################################################
+class PostSpider(scrapy.Spider):
+    """Classe de coleta de dados de respostas da página de uma pergunta."""
+
+    name = 'quora_post_spider'
+
+    custom_settings = {
+        'DOWNLOAD_DELAY': 0.05,
+        'CONCURRENT_REQUESTS': 5,
+    }
+
+    def __init__(self, requests_params: dict, client: MongoClient):
+        super().__init__()
+
+        self._db = client["quora_database"]
+
+        try:
+            self.url = requests_params['question-page']['url']
+            self.headers = requests_params['question-page']['headers']
+            self.payload = requests_params['question-page']['payload']
+            self.cookies = requests_params['question-page']['cookies']
+            self.headers['user-agent'] += str(requests_params['user-agent'])
+        except Exception:
+            raise ValueError("Verifique o arquivo de parâmetros.")
+
+    def start_requests(self):
+        posts = self._db["posts"].find()
+        posts = [line for line in posts]
+
+        self.hasNextPage = dict()
+        for line in tqdm(posts, desc="Lendo bd.tmp:"):
+            category = line.get("category", "General")
+            query = line.get("query")
+            pid = line.get("_id")
+            self.hasNextPage[pid] = True
+            self._after = 0
+            self.payload["variables"]["multifeedNumBundlesOnClient"] = str(self._after)
+            self.payload["variables"]["pagedata"] = pid
+
+            while True:
+                yield scrapy.http.JsonRequest(
+                    url=self.url,
+                    headers=self.headers,
+                    data=self.payload,
+                    cookies=self.cookies,
+                    callback=self.parse,
+                    cb_kwargs={'qid': pid,
+                               'query': query,
+                               'category': category}
+                )
+                if not self.hasNextPage[pid]:
+                    break
+
+        try:
+            self._db["tmp"].drop()
+        except Exception as e:
+            print(e)
+
+    def parse(self, response, category, query, qid):
         result = response.json()
         pagedListDataConnection = result["data"]["question"][
             "pagedListDataConnection"]

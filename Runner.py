@@ -14,6 +14,8 @@ from os.path import isfile as _isfile
 from pymongo import MongoClient as _MongoClient
 from QScraper import AnswerSpider as _AnswerSpider
 from QScraper import SearchSpider as _SearchSpider
+from QScraper import TopicSpider as _TopicSpider
+from QScraper import PostSpider as _PostSpider
 from scrapy.crawler import CrawlerRunner as _CrawlerRunner
 from scrapy.settings import Settings as _Settings
 from twisted.internet import defer as _defer
@@ -114,10 +116,15 @@ class QScrapeRunner:
 
         @_defer.inlineCallbacks
         def crawl():
+            search_types={
+                "question": _AnswerSpider,
+                "topic":_TopicSpider,
+                "post" : _PostSpider
+            }
             yield runner.crawl(_SearchSpider, queries,
                                self._requests_params, client=client,
                                result_type=search_result_type)
-            yield runner.crawl(_AnswerSpider, self._requests_params,
+            yield runner.crawl(search_types[search_result_type], self._requests_params,
                                client=client)
             _reactor.stop()
 
@@ -128,16 +135,32 @@ class QScrapeRunner:
 if __name__ == "__main__":
     from os import sep as _os_sep
 
-    loc = f'etc{_os_sep}X509-cert-90734881775499626.pem'
+    # loc = f'etc{_os_sep}X509-cert-90734881775499626.pem'
+    # uri = ("mongodb+srv://quora-scrape.io7ki.mongodb.net/myFirstDatabase?"
+    #        "authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true"
+    #        "&w=majority")
+    # client = _MongoClient(uri , tls=True, tlsCertificateKeyFile=loc)
 
-    uri = ("mongodb+srv://quora-scrape.io7ki.mongodb.net/myFirstDatabase?"
-           "authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true"
-           "&w=majority")
-    client = _MongoClient(uri, tls=True, tlsCertificateKeyFile=loc)
+    uri = ("mongodb://localhost:27017/")
+    client = _MongoClient(uri)
 
-    qsr = QScrapeRunner(
-        "example",
-        "example@email.com",
-        f"etc{_os_sep}requests_params.json"
-    )
-    qsr.run(client, "etc{_os_sep}keywords.json")
+    # qsr_answers = QScrapeRunner(
+    #     "example",
+    #     "example@email.com",
+    #     f"etc{_os_sep}requests_params_answers.json"
+    # )
+    # qsr_answers.run(client, f"etc{_os_sep}keywords.json", search_result_type="question")
+
+    # qsr_topics = QScrapeRunner(
+    #     "example",
+    #     "example@email.com",
+    #     f"etc{_os_sep}requests_params_topics.json"
+    # )
+    # qsr_topics.run(client, f"etc{_os_sep}keywords.json", search_result_type="topic")
+
+    qsr_posts = QScrapeRunner(
+            "example",
+            "example@email.com",
+            f"etc{_os_sep}requests_params_posts.json"
+        )
+    qsr_posts.run(client, f"etc{_os_sep}keywords.json", search_result_type="post")
