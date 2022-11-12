@@ -5,7 +5,7 @@
             "accept": "*/*",
             "content-type": "application/json; charset=utf-8",
             "quora-formkey": "2f8ae0683ce1bb7e6178de78c8c6b012",
-            "user-agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:106.0) Gecko/20100101 Firefox/106.0"
+            "user-agent": "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
         },
         "payload": {
             "queryName": "SearchResultsListQuery",
@@ -40,20 +40,17 @@
     "topic-page": {
         "url": "https://www.quora.com/graphql/gql_para_POST?q=MultifeedQuery",
         "headers":{
-            "Accept": "*/*",
-            "Accept-Language": "en-US,en;q=0.5",
-            "Referer": "https://www.quora.com/topic/HIV",
-            "Content-Type": "application/json",
-            "Quora-Window-Id": "react_paoehmazchjyudof",
-            "Quora-Formkey": "2f8ae0683ce1bb7e6178de78c8c6b012",
-            "Quora-Broadcast-Id": "main-w-chan52-8888-react_paoehmazchjyudof-QAHY",
-            "Quora-Revision": "c599c6fc0fc88df5ff081fa947e7329bb82b6698"
+            "accept": "*/*",
+            "referer": "",
+            "content-type": "application/json",
+            "quora-formkey": "2f8ae0683ce1bb7e6178de78c8c6b012",
+            "user-agent": "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
         },
         "payload":{
             "queryName":"MultifeedQuery",
             "variables":{
                 "first":10,
-                "multifeedAfter":"4990715076633838089",
+                "multifeedAfter":"6130360068932543788",
                 "multifeedNumBundlesOnClient":0,
                 "injectionType":null,
                 "injectionData":null,
@@ -64,10 +61,11 @@
                 "showLiveBanner":false
             },
             "extensions":{
-                "hash":"7e23255c6e6cfb73edfbc06e60b3163c4655b680b54f28d1f700be0d478aa5fd"
+                "hash":"e3d4233a48fcf75eac56c8f07961ed49b43479c847c39053e503e949bec442f9"
             }
         },
         "cookies":{
+            "m-b": "AIfETwM_d4THU6rn1vNOxA==",
             "m-b_lax": "1hEAFG_NhtGDK7weKJGssQ==",
             "m-b_strict": "1hEAFG_NhtGDK7weKJGssQ==", 
             "m-s": "5TeCpX73Bg3MeiBd5Bs0BA==", 
@@ -79,7 +77,6 @@
             "__stripe_mid": "865207e1-11d7-4d5f-9829-806309458859ce59d7", 
             "__cf_bm": "DLizpuBuCo03jE5u.BAai9aogSWC88OaBBAc2pWe.K8-1666817056-0-AcgrAlrTE4NlCJTDzFev8ELEX+6qjGy9cDe0b4OrPJjg/4aWVpSL3WFX6nATwCXcAwM1y2MVJ06M4+FxAnfEyKM=", 
             "__stripe_sid": "e3604354-d38b-4152-a27b-36f771e15767d9b477"
-        
         }
 
     },
