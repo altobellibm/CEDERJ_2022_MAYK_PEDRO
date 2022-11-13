@@ -20,6 +20,7 @@ from scrapy.crawler import CrawlerRunner as _CrawlerRunner
 from scrapy.settings import Settings as _Settings
 from twisted.internet import defer as _defer
 from twisted.internet import reactor as _reactor
+import sys
 
 
 class QScrapeRunner:
@@ -124,7 +125,8 @@ class QScrapeRunner:
             yield runner.crawl(_SearchSpider, queries,
                                self._requests_params, client=client,
                                result_type=search_result_type)
-            yield runner.crawl(search_types[search_result_type], self._requests_params,
+            if search_result_type == "question":
+                yield runner.crawl(search_types[search_result_type], self._requests_params,
                                client=client)
             _reactor.stop()
 
@@ -135,32 +137,31 @@ class QScrapeRunner:
 if __name__ == "__main__":
     from os import sep as _os_sep
 
-    # loc = f'etc{_os_sep}X509-cert-90734881775499626.pem'
-    # uri = ("mongodb+srv://quora-scrape.io7ki.mongodb.net/myFirstDatabase?"
-    #        "authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true"
-    #        "&w=majority")
-    # client = _MongoClient(uri , tls=True, tlsCertificateKeyFile=loc)
-
     uri = ("mongodb://localhost:27017/")
     client = _MongoClient(uri)
 
-    # qsr_answers = QScrapeRunner(
-    #     "example",
-    #     "example@email.com",
-    #     f"etc{_os_sep}requests_params_answers.json"
-    # )
-    # qsr_answers.run(client, f"etc{_os_sep}keywords.json", search_result_type="question")
+    inp = sys.argv[1]
 
-    # qsr_topics = QScrapeRunner(
-    #     "example",
-    #     "example@email.com",
-    #     f"etc{_os_sep}requests_params_topics.json"
-    # )
-    # qsr_topics.run(client, f"etc{_os_sep}keywords.json", search_result_type="topic")
-
-    qsr_posts = QScrapeRunner(
+    if inp=="question":
+        qsr_answers = QScrapeRunner(
             "example",
             "example@email.com",
-            f"etc{_os_sep}requests_params_posts.json"
+            f"etc{_os_sep}requests_params_answers.json"
         )
-    qsr_posts.run(client, f"etc{_os_sep}keywords.json", search_result_type="post")
+        qsr_answers.run(client, f"etc{_os_sep}keywords.json", search_result_type="question")
+    elif inp=="topic":
+        qsr_topics = QScrapeRunner(
+            "example",
+            "example@email.com",
+            f"etc{_os_sep}requests_params_topics.json"
+        )
+        qsr_topics.run(client, f"etc{_os_sep}keywords.json", search_result_type="topic")
+    elif inp=="post":
+        qsr_posts = QScrapeRunner(
+                "example",
+                "example@email.com",
+                f"etc{_os_sep}requests_params_posts.json"
+            )
+        qsr_posts.run(client, f"etc{_os_sep}keywords.json", search_result_type="post")
+    else:
+        raise IOError("Tipo de busca inválido.\nOs inputs validos são: question, topic ou post")

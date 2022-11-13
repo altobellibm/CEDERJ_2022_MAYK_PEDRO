@@ -1,0 +1,148 @@
+<mxfile host="65bd71144e">
+    <diagram id="46sWiYpx2wrklKaFb7Pu" name="Page-1">
+        <mxGraphModel dx="946" dy="511" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="32" style="edgeStyle=elbowEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;fontFamily=Helvetica;rounded=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="2">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="200" y="390" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="2" value="category" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="20" y="310" width="120" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="{&lt;br&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; _id: integer&lt;/span&gt;&lt;/div&gt;}" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=monospace;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3Dmonospace;" vertex="1" parent="2">
+                    <mxGeometry x="10" y="30" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;startArrow=classic;startFill=1;" edge="1" parent="1" source="5" target="7">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="questions" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="250" y="650" width="130" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="{&lt;br&gt;&amp;nbsp; _id: pid&lt;br&gt;&amp;nbsp; {&lt;br&gt;&amp;nbsp; &amp;nbsp; question&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=monospace;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3Dmonospace;" vertex="1" parent="5">
+                    <mxGeometry x="12.5" y="30" width="100" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;startArrow=classic;startFill=1;" edge="1" parent="1" source="7" target="9">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="question_answer" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="470" y="650" width="130" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="{&lt;br&gt;&amp;nbsp; _id: string&lt;br&gt;&amp;nbsp; qid: integer&lt;br&gt;&amp;nbsp; aid: integer&lt;br&gt;}" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=monospace;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3Dmonospace;" vertex="1" parent="7">
+                    <mxGeometry x="5" y="30" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="answers" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="650" y="510" width="130" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="{&lt;br&gt;&amp;nbsp; _id: pid&lt;br&gt;&amp;nbsp; {&lt;br&gt;&amp;nbsp; &amp;nbsp; answer&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=monospace;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3Dmonospace;" vertex="1" parent="9">
+                    <mxGeometry x="10" y="30" width="90" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" style="edgeStyle=elbowEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;fontFamily=Helvetica;rounded=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="11">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="200" y="430" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="11" value="query" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="20" y="420" width="120" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="{&lt;br&gt;&amp;nbsp; _id: integer&lt;br&gt;}" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=monospace;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3Dmonospace;" vertex="1" parent="11">
+                    <mxGeometry x="10" y="30" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;" edge="1" parent="1" source="13" target="15">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;startArrow=classic;startFill=1;" edge="1" parent="1" source="13" target="26">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;startArrow=classic;startFill=1;" edge="1" parent="1" source="13" target="20">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="430" y="340"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="13" value="category_query" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="350" width="200" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="&lt;div&gt;{&lt;br&gt;&amp;nbsp; _id:&amp;nbsp; &amp;nbsp; &amp;nbsp; string&lt;br&gt;&amp;nbsp; category: integer&lt;/div&gt;&lt;div&gt;&amp;nbsp; query:&amp;nbsp; &amp;nbsp; integer&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=monospace;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3Dmonospace;" vertex="1" parent="13">
+                    <mxGeometry x="17.5" y="20" width="150" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;startArrow=classic;startFill=1;" edge="1" parent="1" source="15" target="5">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="160" y="620"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="15" value="category_query_qid" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="195" y="510" width="210" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="{&lt;br&gt;&amp;nbsp; _id:&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; string&lt;br&gt;&amp;nbsp; category_query: string&lt;br&gt;&amp;nbsp; qid:&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; integer&lt;br&gt;}" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=monospace;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3Dmonospace;" vertex="1" parent="15">
+                    <mxGeometry x="10" y="30" width="200" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;startArrow=classic;startFill=1;" edge="1" parent="1" source="18" target="22">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="space_post" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="570" y="50" width="145" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="{&lt;br&gt;&amp;nbsp; _id: string&lt;br&gt;&amp;nbsp; sid: integer&lt;br&gt;&amp;nbsp; pid: integer&lt;br&gt;}" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=monospace;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3Dmonospace;" vertex="1" parent="18">
+                    <mxGeometry x="10" y="30" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;startArrow=classic;startFill=1;" edge="1" parent="1" source="20" target="24">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="150" y="185"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="20" value="category_query_tid" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="180" y="200" width="220" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="{&lt;br&gt;&amp;nbsp; _id:&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; string&lt;br&gt;&amp;nbsp; category_query: string&lt;br&gt;&amp;nbsp; tid:&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; integer&lt;br&gt;}" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=monospace;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3Dmonospace;" vertex="1" parent="20">
+                    <mxGeometry x="7.5" y="30" width="200" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="spaces" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="400" y="50" width="130" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="{&lt;br&gt;&amp;nbsp; _id: sid&lt;br&gt;&amp;nbsp; {&lt;br&gt;&amp;nbsp; &amp;nbsp; space&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=monospace;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3Dmonospace;" vertex="1" parent="22">
+                    <mxGeometry x="5" y="30" width="90" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="topics" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="180" y="50" width="130" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="{&lt;br&gt;&amp;nbsp; _id: tid&lt;br&gt;&amp;nbsp; {&lt;br&gt;&amp;nbsp; &amp;nbsp; topic&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=monospace;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3Dmonospace;" vertex="1" parent="24">
+                    <mxGeometry x="5" y="30" width="90" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;fontFamily=Helvetica;startArrow=classic;startFill=1;" edge="1" parent="1" source="26" target="28">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="760" y="340"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="category_query_pid" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="490" y="350" width="237.5" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="&lt;div&gt;{&lt;br&gt;&amp;nbsp; _id:&amp;nbsp; &amp;nbsp; &amp;nbsp; string&lt;br&gt;&amp;nbsp; category_query : integer&lt;/div&gt;&lt;div&gt;&amp;nbsp; pid:&amp;nbsp; &amp;nbsp; &amp;nbsp; integer&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=monospace;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3Dmonospace;" vertex="1" parent="26">
+                    <mxGeometry x="10" y="30" width="200" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;startArrow=classic;startFill=1;" edge="1" parent="1" source="28" target="18">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="770" y="200"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="28" value="posts" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="597.5" y="210" width="130" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="{&lt;br&gt;&amp;nbsp; _id: pid&lt;br&gt;&amp;nbsp; {&lt;br&gt;&amp;nbsp; &amp;nbsp; post&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=monospace;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3Dmonospace;" vertex="1" parent="28">
+                    <mxGeometry x="9" y="30" width="90" height="90" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -88,7 +88,9 @@ class SearchSpider(scrapy.Spider):
         for cat in queries:
             # inserindo category inéditas no banco - coleção category
             try:
-                self._db['category'].insert_one({"_id": cat})
+                self._db['category'].insert_one(
+                    {"_id": cat}
+                )
             except DuplicateKeyError:
                 pass
 
@@ -96,7 +98,8 @@ class SearchSpider(scrapy.Spider):
                 # inserindo queries inéditas no banco - coleção query
                 try:
                     self._db['query'].insert_one(
-                        {"_id": q})
+                        {"_id": q}
+                    )
                 except DuplicateKeyError:
                     pass
 
@@ -259,7 +262,7 @@ class SearchSpider(scrapy.Spider):
                         pass
 
                     try:
-                        self._db["space"].insert_one(space)
+                        self._db["spaces"].insert_one(space)
                     except DuplicateKeyError:
                         pass
 
@@ -458,69 +461,70 @@ class TopicSpider(scrapy.Spider):
             raise ValueError("Verifique o arquivo de parâmetros.")
 
     def start_requests(self):
-        topics = self._db["topics"].find()
-        topics = [line for line in topics]
+        # topics = self._db["topics"].find()
+        # topics = [line for line in topics]
 
-        self.hasNextPage = dict()
+        # self.hasNextPage = dict()
         
-        for line in tqdm(topics, desc="Lendo bd.topics:"):
-            print(f"Line:\n{line}\n")
-            category = line.get("category", "General")
-            query = line.get("query")
-            tid = line.get("_id")
-            # url = line.get("url")
-            self.hasNextPage[tid] = True
-            self._after = 0
-            # self.headers["referer"] = f"https://www.quora.com{url}"
-            self.payload["variables"]["multifeedNumBundlesOnClient"] = str(self._after)
-            self.payload["variables"]["pagedata"] = tid
+        # for line in tqdm(topics, desc="Lendo bd.topics:"):
+        #     print(f"Line:\n{line}\n")
+        #     category = line.get("category", "General")
+        #     query = line.get("query")
+        #     tid = line.get("_id")
+        #     url = line.get("url")
+        #     self.hasNextPage[tid] = True
+        #     self._after = 0
+        #     self.headers["referer"] = f"https://www.quora.com{url}"
+        #     self.payload["variables"]["multifeedNumBundlesOnClient"] = str(self._after)
+        #     self.payload["variables"]["pagedata"] = tid
 
-            while True:
-                yield scrapy.http.JsonRequest(
-                    url=self.url,
-                    headers=self.headers,
-                    data=self.payload,
-                    cookies=self.cookies,
-                    callback=self.parse,
-                    cb_kwargs={'tid': tid,
-                               'query': query,
-                               'category': category}
-                )
-                if not self.hasNextPage[tid]:
-                    break
+        #     while True:
+        #         yield scrapy.http.JsonRequest(
+        #             url=self.url,
+        #             headers=self.headers,
+        #             data=self.payload,
+        #             cookies=self.cookies,
+        #             callback=self.parse,
+        #             cb_kwargs={'tid': tid,
+        #                        'query': query,
+        #                        'category': category}
+        #         )
+        #         if not self.hasNextPage[tid]:
+        #             break
 
-        try:
-            self._db["tmp"].drop()
-        except Exception as e:
-            print(e)
+        # try:
+        #     self._db["tmp"].drop()
+        # except Exception as e:
+        #     print(e)
+        pass
 
     def parse(self, response, category, query, tid):
-        print("parse")
-        result = response.json()
+        # print("parse")
+        # result = response.json()
 
-        if not result["data"]:
-            print(result)
-            # pagedListDataConnection={
-            #     "pageInfo": {}
-            # }
-        else:
-            pagedListDataConnection = result["data"]["question"][
-                "pagedListDataConnection"]
-            edges = pagedListDataConnection["edges"]
+        # if not result["data"]:
+        #     print(result)
+        #     pagedListDataConnection={
+        #         "pageInfo": {}
+        #     }
+        # else:
+        #     pagedListDataConnection = result["data"]["question"][
+        #         "pagedListDataConnection"]
+        #     edges = pagedListDataConnection["edges"]
         
-            iteracao = (self._after + 1) // 12
-            for item in tqdm(edges,
-                            desc=f"Parsing {iteracao} Questions of {tid}"):
-                print(item)
-                if "answer" not in item["node"]:
-                    continue
-                # QuestionAnswerItem2 -> é uma resposta da pergunta em específico
-                if item["node"]["__typename"] != "QuestionAnswerItem2":
-                    continue
+        #     iteracao = (self._after + 1) // 12
+        #     for item in tqdm(edges,
+        #                     desc=f"Parsing {iteracao} Questions of {tid}"):
+        #         print(item)
+        #         if "answer" not in item["node"]:
+        #             continue
+        #         # QuestionAnswerItem2 -> é uma resposta da pergunta em específico
+        #         if item["node"]["__typename"] != "QuestionAnswerItem2":
+        #             continue
 
-                answer = item["node"]["answer"]
-                tid = answer["tid"]
-                answer['_id'] = tid
+        #         answer = item["node"]["answer"]
+        #         tid = answer["tid"]
+        #         answer['_id'] = tid
 
         #     try:
         #         # Inserindo relações question-answer inéditas no banco -
@@ -539,15 +543,16 @@ class TopicSpider(scrapy.Spider):
         #     except DuplicateKeyError:
         #         pass
 
-        hasNextPage = pagedListDataConnection["pageInfo"].get("hasNextPage",
-                                                            False)
-        if not hasNextPage:
-            # Indica que não existe próxima página
-            self.hasNextPage[tid] = False
+        # hasNextPage = pagedListDataConnection["pageInfo"].get("hasNextPage",
+        #                                                     False)
+        # if not hasNextPage:
+        #     # Indica que não existe próxima página
+        #     self.hasNextPage[tid] = False
 
-        # Atualizando atributo da próxima request
-        self._after += 12  # after1 = first*n + after0
-        self.payload["variables"]["after"] = str(self._after)
+        # # Atualizando atributo da próxima request
+        # self._after += 12  # after1 = first*n + after0
+        # self.payload["variables"]["after"] = str(self._after)
+        pass
 
 ###############################################################################
 class PostSpider(scrapy.Spider):
@@ -566,90 +571,92 @@ class PostSpider(scrapy.Spider):
         self._db = client["quora_database"]
 
         try:
-            self.url = requests_params['question-page']['url']
-            self.headers = requests_params['question-page']['headers']
-            self.payload = requests_params['question-page']['payload']
-            self.cookies = requests_params['question-page']['cookies']
+            self.url = requests_params['post-page']['url']
+            self.headers = requests_params['post-page']['headers']
+            self.payload = requests_params['post-page']['payload']
+            self.cookies = requests_params['post-page']['cookies']
             self.headers['user-agent'] += str(requests_params['user-agent'])
         except Exception:
             raise ValueError("Verifique o arquivo de parâmetros.")
 
     def start_requests(self):
-        posts = self._db["posts"].find()
-        posts = [line for line in posts]
+        # posts = self._db["posts"].find()
+        # posts = [line for line in posts]
 
-        self.hasNextPage = dict()
-        for line in tqdm(posts, desc="Lendo bd.tmp:"):
-            category = line.get("category", "General")
-            query = line.get("query")
-            pid = line.get("_id")
-            self.hasNextPage[pid] = True
-            self._after = 0
-            self.payload["variables"]["multifeedNumBundlesOnClient"] = str(self._after)
-            self.payload["variables"]["pagedata"] = pid
+        # self.hasNextPage = dict()
+        # for line in tqdm(posts, desc="Lendo bd.tmp:"):
+        #     category = line.get("category", "General")
+        #     query = line.get("query")
+        #     pid = line.get("_id")
+        #     self.hasNextPage[pid] = True
+        #     self._after = 0
+        #     self.payload["variables"]["multifeedNumBundlesOnClient"] = str(self._after)
+        #     self.payload["variables"]["pagedata"] = pid
 
-            while True:
-                yield scrapy.http.JsonRequest(
-                    url=self.url,
-                    headers=self.headers,
-                    data=self.payload,
-                    cookies=self.cookies,
-                    callback=self.parse,
-                    cb_kwargs={'qid': pid,
-                               'query': query,
-                               'category': category}
-                )
-                if not self.hasNextPage[pid]:
-                    break
+        #     while True:
+        #         yield scrapy.http.JsonRequest(
+        #             url=self.url,
+        #             headers=self.headers,
+        #             data=self.payload,
+        #             cookies=self.cookies,
+        #             callback=self.parse,
+        #             cb_kwargs={'qid': pid,
+        #                        'query': query,
+        #                        'category': category}
+        #         )
+        #         if not self.hasNextPage[pid]:
+        #             break
 
-        try:
-            self._db["tmp"].drop()
-        except Exception as e:
-            print(e)
+        # try:
+        #     self._db["tmp"].drop()
+        # except Exception as e:
+        #     print(e)
+        pass
 
     def parse(self, response, category, query, qid):
-        result = response.json()
-        pagedListDataConnection = result["data"]["question"][
-            "pagedListDataConnection"]
-        edges = pagedListDataConnection["edges"]
+        # result = response.json()
+        # pagedListDataConnection = result["data"]["question"][
+        #     "pagedListDataConnection"]
+        # edges = pagedListDataConnection["edges"]
 
-        iteracao = (self._after + 1) // 12
-        for item in tqdm(edges,
-                         desc=f"Parsing {iteracao} Answers of {qid}"):
-            # pulando o que não é resposta
-            if "answer" not in item["node"]:
-                continue
-            # QuestionAnswerItem2 -> é uma resposta da pergunta em específico
-            if item["node"]["__typename"] != "QuestionAnswerItem2":
-                continue
+        # iteracao = (self._after + 1) // 12
+        # for item in tqdm(edges,
+        #                  desc=f"Parsing {iteracao} Answers of {qid}"):
+        #     # pulando o que não é resposta
+        #     if "answer" not in item["node"]:
+        #         continue
+        #     # QuestionAnswerItem2 -> é uma resposta da pergunta em específico
+        #     if item["node"]["__typename"] != "QuestionAnswerItem2":
+        #         continue
 
-            answer = item["node"]["answer"]
-            aid = answer["aid"]
-            answer['_id'] = aid
+        #     answer = item["node"]["answer"]
+        #     aid = answer["aid"]
+        #     answer['_id'] = aid
 
-            try:
-                # Inserindo relações question-answer inéditas no banco -
-                # coleção question_answer
-                self._db["question_answer"].insert_one(
-                    {"_id": f"{qid}_{aid}",
-                     "qid": qid,
-                     "aid": aid}
-                )
-            except DuplicateKeyError:
-                pass
+        #     try:
+        #         # Inserindo relações question-answer inéditas no banco -
+        #         # coleção question_answer
+        #         self._db["question_answer"].insert_one(
+        #             {"_id": f"{qid}_{aid}",
+        #              "qid": qid,
+        #              "aid": aid}
+        #         )
+        #     except DuplicateKeyError:
+        #         pass
 
-            try:
-                # inserindo answers inéditas no banco - coleção answers
-                self._db["answers"].insert_one(answer)
-            except DuplicateKeyError:
-                pass
+        #     try:
+        #         # inserindo answers inéditas no banco - coleção answers
+        #         self._db["answers"].insert_one(answer)
+        #     except DuplicateKeyError:
+        #         pass
 
-        hasNextPage = pagedListDataConnection["pageInfo"].get("hasNextPage",
-                                                              False)
-        if not hasNextPage:
-            # Indica que não existe próxima página
-            self.hasNextPage[qid] = False
+        # hasNextPage = pagedListDataConnection["pageInfo"].get("hasNextPage",
+        #                                                       False)
+        # if not hasNextPage:
+        #     # Indica que não existe próxima página
+        #     self.hasNextPage[qid] = False
 
-        # Atualizando atributo da próxima request
-        self._after += 12  # after1 = first*n + after0
-        self.payload["variables"]["after"] = str(self._after)
+        # # Atualizando atributo da próxima request
+        # self._after += 12  # after1 = first*n + after0
+        # self.payload["variables"]["after"] = str(self._after)
+        pass

@@ -37,10 +37,7 @@
             "G_ENABLED_IDPS": "google"
         }
     },
-
-
-
-    "question-page": {
+    "post-page": {
         "url": "https://www.quora.com/graphql/gql_para_POST?q=QuestionAnswerPagedListQuery",
         "headers": {
             "accept": "*/*",
