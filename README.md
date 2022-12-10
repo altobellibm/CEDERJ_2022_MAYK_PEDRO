@@ -1,4 +1,6 @@
-# Trabalho de conclusão de curso CEDERJ 2022-2
+# QScrapper2.0: Web scraping de dados do Quora referentes à medicamentos para HIV
+
+# Trabalho de conclusão do curso de Bacharelado em Sistemas de Computação CEDERJ 2022-2
 
 O presente repositório contém o código fonte referente ao TCC dos alunos:
 - Mayk Caldas
